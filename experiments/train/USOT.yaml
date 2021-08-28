@@ -1,0 +1,84 @@
+USOT:
+  GPUS: '0,1,2,3'
+  PRINT_FREQ: 10
+  WORKERS: 32
+  OUTPUT_DIR: 'var/log'   # Log file
+  CHECKPOINT_DIR: 'var/snapshot'   # Checkpoint file
+
+  TRAIN:
+    ISTRUE: True   # Whether to train, used in scripts/onekey_usot.py
+    MODEL: "USOT"
+    START_EPOCH: 1
+    END_EPOCH: 30
+    TEMPLATE_SIZE: 127
+    SEARCH_SIZE: 255
+    STRIDE: 8
+    BATCH: 12
+    BATCH_STAGE_2: 12
+    PRETRAIN: 'imagenet_pretrain.model' # 'moco_v2_800.model'
+    WARM_POLICY: 'step'
+    UNFIX_POLICY: 'log'
+    # RESUME: './var/snapshot/checkpoint_exx.pth'
+
+    WARMUP:
+      IFNOT: True
+      TYPE: 'step'
+      EPOCH: 5
+      KWARGS:
+        start_lr: 0.0025
+        end_lr: 0.005
+        step: 1
+    LR:
+      TYPE: 'log'
+      KWARGS:
+        start_lr: 0.005
+        end_lr: 0.00002
+
+    LAYERS_LR: 0.1
+    BASE_LR: 0.005
+    UNFIX_EPOCH: 10
+    MEMORY_EPOCH: 6
+    LAMBDA_1_NAIVE: 0.20
+    LAMBDA_SHIFT_EPOCHS: [0, 7, 9]
+    LAMBDA_1_LIST: [0.30, 0.275, 0.25]
+    LAMBDA_TOTAL: 0.9
+    CLS_RATIO_SHIFT_EPOCHS: [0, 7, 9]
+    CLS_RATIOS: [0.55, 0.5, 0.45]
+    MOMENTUM: 0.9
+    WEIGHT_DECAY: 0.0001
+    MEMORY_NUM: 4
+    TRAINABLE_LAYER: ['layer1', 'layer2', 'layer3']
+    WHICH_USE: ['VID', 'GOT10K', 'LASOT', 'YTVOS']  # VID, GOT10K, LASOT, YTVOS
+
+  TEST:    # TEST model is same as TRAIN.MODEL
+    ISTRUE: True  # Whether to test
+    THREADS: 11   # Multi-threads test
+    DATA: 'VOT2018'
+    START_EPOCH: 10
+    END_EPOCH: 30
+
+  DATASET:
+    SHIFT: 4
+    SCALE: 0.05
+    SHIFTs: 64
+    SCALEs: 0.18
+    SHIFTm: 64
+    SCALEm: 0.18
+    VIDEO_QUALITY: 0.40
+    FAR_SAMPLE: 3
+    GOT10K:
+      PATH: '/home/jlzheng/dataset/got10k_flow/crop511/'
+      ANNOTATION: '/home/jlzheng/dataset/got10k_flow/train.json'
+      USE: 19000
+    VID:
+      PATH: '/home/jlzheng/dataset/VID_flow/crop511/'
+      ANNOTATION: '/home/jlzheng/dataset/VID_flow/train.json'
+      USE: 14000
+    LASOT:
+      PATH: '/home/jlzheng/dataset/lasot_flow/crop511/'
+      ANNOTATION: '/home/jlzheng/dataset/lasot_flow/train.json'
+      USE: 13000
+    YTVOS:
+      PATH: '/home/jlzheng/dataset/ytvos_flow/crop511/'
+      ANNOTATION: '/home/jlzheng/dataset/ytvos_flow/train.json'
+      USE: 4000

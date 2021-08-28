@@ -1,0 +1,8 @@
+TEST:
+  penalty_k: 0.021
+  lr: 0.730
+  window_influence: 0.321
+  small_sz: 255
+  big_sz: 271
+  ratio: 0.3
+  mem_queue_size: 7

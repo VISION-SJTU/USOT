@@ -1,0 +1,35 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+
+# build files
+build/
+dist/
+
+# testing datasets
+datasets_test/
+
+# idea
+.idea/
+
+# var
+var/
+
+# logs
+*.log
+
+# Environments
+.env
+
+# config files
+*.json
+
+# pretrained models
+*.model
+*.tar
+*.pth
+
+# dist
+*.egg
+
+# dll
+*.so
