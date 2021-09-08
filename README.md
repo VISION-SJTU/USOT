@@ -134,7 +134,7 @@ Jilai Zheng, Chao Ma, Houwen Peng and Xiaokang Yang
  and place them into the corresponding dataset preprocessing path 
  (e.g. `$USOT_PATH/preprocessing/datasets_train/got10k`), in order to skip the box generation procedure.
  - You can directly download the whole cropped training dataset (e.g. `got10k_flow.tar`) in 
- dataset folder from [Google Drive (Coming soon)]() (e.g. `train/GOT-10k`), 
+ dataset folder from [Baidu Drive (6887)](https://pan.baidu.com/s/1xsOuLKanK-w21xKePk4PLw) (e.g. `train/GOT-10k`), 
  which enables you to skip all procedures in preprocessing.
  
  Third, revise the config file for training as `$USOT_PATH/experiments/train/USOT.yaml`.

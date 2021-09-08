@@ -15,9 +15,9 @@ in folder `pretrain/preprocessing` and place it in
 Install the Flow Module. We use pytorch 1.1.0 + CUDA-10.0 to build this module.
  
 ```shell
-cd $USOT_PATH/preprocessing
-bash ./install_preprocessing $CONDA_PATH USOTPre
-source activate USOTPre
+cd $USOT_PATH
+bash ./preprocessing/install_preprocessing.sh $CONDA_PATH USOTPre
+source activate USOTPre && export PYTHONPATH=$(pwd)
 cd $USOT_PATH/preprocessing/flow_module/models/correlation_package
 python setup.py install
 ```

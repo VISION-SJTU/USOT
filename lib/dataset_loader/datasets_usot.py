@@ -257,7 +257,7 @@ class USOTDataset(Dataset):
         :return: [l, t, r, b]
         """
         x1, y1, x2, y2 = bbox
-        l = self.grid_to_search_x - x1  # [17, 17]
+        l = self.grid_to_search_x - x1
         t = self.grid_to_search_y - y1
         r = x2 - self.grid_to_search_x
         b = y2 - self.grid_to_search_y
