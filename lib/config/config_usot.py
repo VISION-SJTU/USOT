@@ -52,7 +52,7 @@ config.USOT.DATASET.VID.USE = 14000
 # GOT-10k configs
 config.USOT.DATASET.GOT10K.PATH = '/home/jlzheng/dataset/tracking/usot/got10k_flow/crop511/'
 config.USOT.DATASET.GOT10K.ANNOTATION = '/home/jlzheng/dataset/tracking/usot/got10k_flow/train.json'
-config.USOT.DATASET.GOT10K.USE = 18000
+config.USOT.DATASET.GOT10K.USE = 19000
 
 # LaSOT configs
 config.USOT.DATASET.LASOT.PATH = '/home/jlzheng/dataset/tracking/usot/lasot_flow/crop511/'
@@ -62,7 +62,7 @@ config.USOT.DATASET.LASOT.USE = 13000
 # YT-VOS configs
 config.USOT.DATASET.YTVOS.PATH = '/home/jlzheng/dataset/tracking/usot/ytvos_flow/crop511/'
 config.USOT.DATASET.YTVOS.ANNOTATION = '/home/jlzheng/dataset/tracking/usot/ytvos_flow/train.json'
-config.USOT.DATASET.YTVOS.USE = 5000
+config.USOT.DATASET.YTVOS.USE = 4000
 
 # Default training configs for USOT
 config.USOT.TRAIN.MODEL = "USOT"

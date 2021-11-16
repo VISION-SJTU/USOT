@@ -185,7 +185,8 @@ def usot_train(train_loader, model, optimizer, epoch,
         cls_ratios_list = cfg.USOT.TRAIN.CLS_RATIOS
         cls_ratio = None
         for i_ep in range(len(cls_ratio_shift_epochs) - 1):
-            if cls_ratios_list[i_ep] <= epoch <= cls_ratios_list[i_ep + 1]:
+            # 2021.11.15: a bug for forward tracking weighting is reported and fixed here
+            if cls_ratio_shift_epochs[i_ep] <= epoch <= cls_ratio_shift_epochs[i_ep + 1]:
                 cls_ratio = cls_ratios_list[i_ep]
                 break
         if cls_ratio is None:
