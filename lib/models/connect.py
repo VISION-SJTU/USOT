@@ -121,21 +121,21 @@ class Conf_Fusion(nn.Module):
         )
 
     def forward(self, x):
-        batch, mem_size, channel, w, h = x.shape
-        x = x.view(-1, channel, w, h)
+        batch, mem_size, channel, h, w = x.shape
+        x = x.view(-1, channel, h, w)
 
         # Calc confidence on each position
         confidence = self.conf_gen(x)
         confidence = torch.clamp(confidence, max=4, min=-6)
         # Softmax each confidence map across all confidence maps
         confidence = torch.exp(confidence)
-        confidence = confidence.view(batch, mem_size, channel, w, h)
-        confidence_sum = confidence.sum(dim=1).view(batch, 1, channel, w, h).repeat(1, mem_size, 1, 1, 1)
+        confidence = confidence.view(batch, mem_size, channel, h, w)
+        confidence_sum = confidence.sum(dim=1).view(batch, 1, channel, h, w).repeat(1, mem_size, 1, 1, 1)
         confidence_norm = confidence / confidence_sum
 
         # The raw value for output (not weighted yet)
         value = self.value_gen(x)
-        value = value.view(batch, mem_size, channel, w, h)
+        value = value.view(batch, mem_size, channel, h, w)
 
         # Weighted sum of the value maps, with confidence maps as element-wise weights
         out = confidence_norm * value
@@ -143,14 +143,15 @@ class Conf_Fusion(nn.Module):
 
         return out
 
+
 def xcorr_depthwise(x, kernel):
     """
     Depth-wise cross correlation
     """
-    batch, channel, w_k, h_k = kernel.shape
-    _, _, w_x, h_x = x.shape
-    x = x.view(-1, batch*channel, w_x, h_x)
-    kernel = kernel.view(batch*channel, 1, w_k, h_k)
+    batch, channel, h_k, w_k = kernel.shape
+    _, _, h_x, w_x = x.shape
+    x = x.view(-1, batch*channel, h_x, w_x)
+    kernel = kernel.view(batch*channel, 1, h_k, w_k)
     out = F.conv2d(x, kernel, groups=batch*channel)
     out = out.view(-1, channel, out.size(2), out.size(3))
     return out
@@ -246,8 +247,7 @@ class box_tower_reg(nn.Module):
         # Cls memory
         if memory_kernel is not None:
 
-            # Memory queue is inputted, so we should conduct tracking with online memory module
-
+            # Since memory queue is inputted, we should conduct tracking with online memory module
             if cls_x_store is None:
                 cls_mem_zs, cls_x_store = self.cls_encode(memory_kernel, x=search)
             else:
@@ -258,14 +258,14 @@ class box_tower_reg(nn.Module):
             batch, mem_size = memory_confidence.shape
             store_repeat = []
             for cls_x in cls_x_store:
-                _, c, w, h = cls_x.shape
-                cls_x_rep = cls_x.view(batch, 1, c, w, h)
-                cls_x_rep = cls_x_rep.repeat(1, mem_size, 1, 1, 1).view(-1, c, w, h)
+                _, c, h, w = cls_x.shape
+                cls_x_rep = cls_x.view(batch, 1, c, h, w)
+                cls_x_rep = cls_x_rep.repeat(1, mem_size, 1, 1, 1).view(-1, c, h, w)
                 store_repeat.append(cls_x_rep)
 
             cls_mem_dw = self.cls_dw(cls_mem_zs, store_repeat)
-            _, c, w, h = cls_mem_dw.shape
-            cls_mem_dw = cls_mem_dw.view(batch, mem_size, c, w, h)
+            _, c, h, w = cls_mem_dw.shape
+            cls_mem_dw = cls_mem_dw.view(batch, mem_size, c, h, w)
 
             # Fuse memory correlation maps
             cls_mem_fusion = self.conf_fusion(cls_mem_dw)

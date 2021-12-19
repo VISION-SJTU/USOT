@@ -347,7 +347,6 @@ class USOTDataset(Dataset):
         draw_image = np.array(image.copy()[:, :, ::-1])
         if box is not None:
             x1, y1, x2, y2 = map(lambda x: int(round(x)), box)
-            draw_image = draw_image
             cv2.rectangle(draw_image, (x1, y1), (x2, y2), (255, 215, 0), 2)
             # cv2.circle(draw_image, (int(round(x1 + x2) / 2), int(round(y1 + y2) / 2)), 3, (0, 0, 255))
             # cv2.putText(draw_image, '[x: {}, y: {}]'.format(int(round(x1 + x2) / 2), int(round(y1 + y2) / 2)),

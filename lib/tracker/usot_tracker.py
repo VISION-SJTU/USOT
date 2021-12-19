@@ -236,6 +236,8 @@ class USOTTracker(object):
             # Online sample (N_q - 3) memory templates with the highest confidence scores
             gap = (mem_length - 1) / mem_queue_size_update
             for i in range(mem_queue_size_update):
+                # 2021.12.19: We notice that the calculation of start_index and end_index seems to deviate
+                #             from what we expect. We leave the implementation version here for reproducing issues.
                 start_index = min(int(int(i * gap) * mem_length), mem_length - 1)
                 end_index = min(int(int((i + 1) * gap) * mem_length), mem_length - 1)
                 if start_index >= end_index:
@@ -258,7 +260,7 @@ class USOTTracker(object):
                                                                   template_mem=template_mem.cuda(),
                                                                   score_mem=score_mem.cuda())
 
-        # Update the memeory queue
+        # Update the memory queue
         state['memory_features'].append(feat_mem)
         state['memory_confidences'].append(confidence)
 

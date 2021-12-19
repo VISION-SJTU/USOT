@@ -186,7 +186,8 @@ class USOT_(nn.Module):
         if template_mem is not None:
             # Track with both offline and online module (with memory queue features existing)
             bbox_pred, cls_pred, cls_feature, reg_feature, cls_memory_pred = self.connect_model(xf, kernel=self.zf,
-                                                           memory_kernel=template_mem, memory_confidence=score_mem)
+                                                                                                memory_kernel=template_mem,
+                                                                                                memory_confidence=score_mem)
 
             # Here xf is the feature of search areas which will be cropped soon according to the final bbox
             return cls_pred, bbox_pred, cls_memory_pred, xf
@@ -230,8 +231,8 @@ class USOT_(nn.Module):
 
             # Now begin to calculate cycle memory loss
             # Extract deep features for memory search areas
-            batch, mem_size, cx, wx, hx = search_memory.shape
-            search_memory = search_memory.view(-1, cx, wx, hx)
+            batch, mem_size, cx, hx, wx = search_memory.shape
+            search_memory = search_memory.view(-1, cx, hx, wx)
             _, xf_mem = self.feature_extractor(search_memory)
             xf_mem = self.neck(xf_mem, crop=False)
 
@@ -243,10 +244,10 @@ class USOT_(nn.Module):
             search_pooled_feature = search_pooled_feature.view(-1, cspf, wspf, hspf)
 
             # Repeat the original template
-            batch, cz, wz, hz = zf.shape
-            zf_mem = zf.view(batch, 1, cz, wz, hz)
+            batch, cz, hz, wz = zf.shape
+            zf_mem = zf.view(batch, 1, cz, hz, wz)
             zf_mem = zf_mem.repeat(1, mem_size, 1, 1, 1)
-            zf_mem = zf_mem.view(-1, cz, wz, hz)
+            zf_mem = zf_mem.view(-1, cz, hz, wz)
 
             # Get the intermediate target bbox and cls score in memory search areas (tracking with offline module)
             off_forward_bbox, off_forward_cls, forward_x_store, _, _ = self.connect_model(xf_mem, kernel=zf_mem)
@@ -276,8 +277,8 @@ class USOT_(nn.Module):
             pooled_mem_features = self.prpool_feature(xf_mem, best_forward_bbox_pool)
             # Backward track from memory queue to the search area in the template frame
             _, _, _, _, backward_res_map = self.connect_model(xf, memory_kernel=pooled_mem_features,
-                                                                memory_confidence=best_forward_cls_score,
-                                                                cls_x_store=cls_x)
+                                                              memory_confidence=best_forward_cls_score,
+                                                              cls_x_store=cls_x)
 
             # Cycle memory loss is calculated with the same pseudo label as original cls loss
             cls_memory_loss = self._weighted_BCE(backward_res_map, label)
