@@ -30,6 +30,7 @@ Jilai Zheng, Chao Ma, Houwen Peng and Xiaokang Yang
     <th>LaSOT<br> AUC (%)</th>
     <th>TrackingNet<br> AUC (%)</th>
     <th>OTB100<br> AUC (%)</th>
+    <th>GOT10k<br> AO (%)</th>
   </tr>
   <tr>
     <td>USOT</td>
@@ -39,6 +40,7 @@ Jilai Zheng, Chao Ma, Houwen Peng and Xiaokang Yang
     <td>33.7</td>
     <td>59.9</td>
     <td>58.9</td>
+    <td>0.444</td>
   </tr>
   <tr>
     <td>USOT*</td>
@@ -48,6 +50,7 @@ Jilai Zheng, Chao Ma, Houwen Peng and Xiaokang Yang
     <td>35.8</td>    
     <td>61.5</td>
     <td>57.4</td>
+    <td>0.441</td>
   </tr>
  </table>
  

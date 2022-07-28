@@ -62,6 +62,7 @@ def track(tracker, net, video, args):
         if not os.path.exists(video_path):
             os.makedirs(video_path)
         result_path = os.path.join(video_path, video['name'] + '_001.txt')
+        time_path = os.path.join(video_path, '{}_time.txt'.format(video['name']))
     else:
         result_path = os.path.join(tracker_path, '{:s}.txt'.format(video['name']))
 
@@ -69,6 +70,7 @@ def track(tracker, net, video, args):
         return
 
     regions = []
+    track_times = []
     image_files, gt = video['image_files'], video['gt']
     for f, image_file in enumerate(image_files):
 
@@ -103,6 +105,8 @@ def track(tracker, net, video, args):
             regions.append(0)
 
         toc += cv2.getTickCount() - tic
+        if 'GOT' in args.dataset:
+            track_times.append((cv2.getTickCount() - tic) / cv2.getTickFrequency())
 
     with open(result_path, "w") as fin:
         if 'VOT' in args.dataset:
@@ -117,6 +121,11 @@ def track(tracker, net, video, args):
                 p_bbox = x.copy()
                 fin.write(
                     ','.join([str(i + 1) if idx == 0 or idx == 1 else str(i) for idx, i in enumerate(p_bbox)]) + '\n')
+
+    if 'GOT' in args.dataset:
+        with open(time_path, 'w') as file_handle:
+            for x in track_times:
+                file_handle.write("{:.6f}\n".format(x))
 
     toc /= cv2.getTickFrequency()
     print('Video: {:12s} Time: {:2.1f}s Speed: {:3.1f}fps'.format(video['name'], toc, f / toc))

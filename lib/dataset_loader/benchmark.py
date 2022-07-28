@@ -140,6 +140,8 @@ def load_dataset(dataset):
         videos = sorted(os.listdir(seq_path))
         videos.remove('list.txt')
         for video in videos:
+            if 'json' in video:
+                continue
             video_path = join(seq_path, video)
             image_path = join(video_path, '*.jpg')
             image_files = sorted(glob.glob(image_path))
